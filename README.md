@@ -1,9 +1,9 @@
-# goxplorer
+# ChadCli 🗿
 
 A keyboard-driven terminal file explorer written in Go, built with [Bubble Tea](https://github.com/charmbracelet/bubbletea).
 
 ```
-~/projects/goxplorer                                                         32 items
+~/projects/chadcli                                                         32 items
 ──────────────────────────────────────────────────────────────────────────────────────
   dir    cmd          Jan 14 09:12
   dir    internal     Jan 14 09:12
@@ -35,10 +35,9 @@ A keyboard-driven terminal file explorer written in Go, built with [Bubble Tea](
 ## Project Architecture
 
 ```
-goxplorer/
+chad/
 ├── cmd/
-│   └── goxplorer/
-│       └── main.go           # Entry point: parse args, create model, run Bubble Tea
+│   └── main.go           # Entry point: parse args, create model, run Bubble Tea
 ├── internal/
 │   ├── explorer/
 │   │   └── explorer.go       # Filesystem: ReadDir, Entry, RenameEntry, CopyEntry, Perform
@@ -95,8 +94,8 @@ the TUI layer, making them independently testable and reusable.
 ### From source
 
 ```bash
-git clone https://github.com/you/goxplorer
-cd goxplorer
+git clone https://github.com/A7med-Mido/chadcli
+cd chadcli
 make install          # installs to $(go env GOPATH)/bin/goxplorer
 ```
 
@@ -104,8 +103,8 @@ Or build a local binary:
 
 ```bash
 make build            # creates ./dist/goxplorer
-./dist/goxplorer      # run from current directory
-./dist/goxplorer ~/   # or pass a starting directory
+./dist/chadcli      # run from current directory
+./dist/chadcli ~/   # or pass a starting directory
 ```
 
 ---
@@ -117,17 +116,17 @@ make build            # creates ./dist/goxplorer
 | Key | Action |
 |---|---|
 | `↑` / `↓` | Move cursor |
-| `Page Up` / `Page Down` | Move half a page |
+| `Page back` / `Page Down` | Move half a page |
 | `Home` / `End` | Jump to first / last item |
 | `Enter` | Open action menu |
-| `Backspace` / `h` | Go up one directory |
+| `Esc` / `Backspace` | Go up one directory (if no search active; clears search first) |
 | `l` | Navigate into selected directory |
 | `~` | Go to home directory |
 | `/` | Start fuzzy search |
+| `.` | Toggle dotfile / hidden file visibility |
 | `r` | Rename selected item |
 | `c` | Copy selected item to clipboard |
 | `v` | Paste clipboard into current directory |
-| `Esc` | Clear active search |
 | `q` / `Ctrl+C` | Quit |
 
 ### Search mode (press `/`)
