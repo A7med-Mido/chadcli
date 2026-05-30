@@ -1,4 +1,4 @@
-# ChadCli 🗿
+# ChadCli
 
 A keyboard-driven terminal file explorer written in Go, built with [Bubble Tea](https://github.com/charmbracelet/bubbletea).
 
@@ -35,7 +35,7 @@ A keyboard-driven terminal file explorer written in Go, built with [Bubble Tea](
 ## Project Architecture
 
 ```
-chad/
+chadcli/
 ├── cmd/
 │   └── main.go           # Entry point: parse args, create model, run Bubble Tea
 ├── internal/
@@ -89,12 +89,48 @@ the TUI layer, making them independently testable and reusable.
 
 ---
 
-## Installation
+## Shell integration — cd on quit
+
+When you press `q`, the shell will `cd` to whatever directory you were browsing. This requires a one-time setup because a child process can't change the parent shell's directory directly — the wrapper handles that via a temp file.
+
+### bash / zsh
+
+Add to `~/.bashrc` or `~/.zshrc`:
+
+```bash
+source /path/to/chadcli/shell/chadcli.sh
+```
+
+Then use `gx` instead of `chadcli`:
+
+```bash
+gx            # open in current directory
+gx ~/projects # open in a specific directory
+```
+
+### fish
+
+Copy the fish function file (fish auto-loads files whose name matches the function):
+
+```fish
+cp /path/to/chadcli/shell/chadcli.fish ~/.config/fish/functions/gx.fish
+```
+
+Then use `gx` the same way.
+
+### How it works
+
+1. The `gx` wrapper creates a temp file and passes its path via `$CHADCLI_CD_FILE`.
+2. When the binary exits, `main.go` writes `model.CurrentDir()` into that file.
+3. The wrapper reads the file and runs `cd` in the parent shell process.
+4. The temp file is always cleaned up, even if the binary crashes.
+
+---
 
 ### From source
 
 ```bash
-git clone https://github.com/A7med-Mido/chadcli
+git clone https://github.com/you/chadcli
 cd chadcli
 make install          # installs to $(go env GOPATH)/bin/goxplorer
 ```
@@ -116,7 +152,7 @@ make build            # creates ./dist/goxplorer
 | Key | Action |
 |---|---|
 | `↑` / `↓` | Move cursor |
-| `Page back` / `Page Down` | Move half a page |
+| `Page Up` / `Page Down` | Move half a page |
 | `Home` / `End` | Jump to first / last item |
 | `Enter` | Open action menu |
 | `Esc` / `Backspace` | Go up one directory (if no search active; clears search first) |
@@ -160,7 +196,7 @@ make build            # creates ./dist/goxplorer
 
 ---
 
-## Extending goxplorer
+## Extending chadcli
 
 ### Add a new editor
 
@@ -174,5 +210,5 @@ All icons use [Nerd Font](https://www.nerdfonts.com/cheat-sheet) code points.
 
 ### Change the colour theme
 
-All colours and styles live in `internal/ui/styles.go`. Swap the `color*` variables
+All colors and styles live in `internal/ui/styles.go`. Swap the `color*` variables
 to adopt any terminal palette (e.g. Solarized, Gruvbox, Nord).
